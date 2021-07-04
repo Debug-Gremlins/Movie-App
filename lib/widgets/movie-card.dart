@@ -58,7 +58,7 @@ class _MovieCardState extends State<MovieCard> {
                         width: 5.0,
                       ),
                       Text(
-                        widget.movie.releaseYear.toString(),
+                        widget.movie.releaseDate.toString(),
                         style: TextStyle(fontSize: 18, fontFamily: 'Kufam'),
                       )
                     ],

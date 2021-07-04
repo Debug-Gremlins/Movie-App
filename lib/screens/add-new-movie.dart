@@ -1,10 +1,11 @@
 import 'dart:io';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:movie_app/database/movie-data.dart';
+import 'package:movie_app/database/sqflite-db.dart';
 import 'package:movie_app/models/movie-model.dart';
+import 'package:movie_app/screens/home-page.dart';
 
 class AddNewMoviePage extends StatefulWidget {
   AddNewMoviePage({Key key}) : super(key: key);
@@ -25,6 +26,12 @@ class _AddNewMoviePageState extends State<AddNewMoviePage> {
       _formKey.currentState.save();
       movie.category = category;
       print(movie);
+      DBSQFliteHelper.insertMovie(movie).then((id) {
+        if (id > 0) {
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => HomePage()));
+        }
+      });
     }
   }
 
@@ -37,7 +44,7 @@ class _AddNewMoviePageState extends State<AddNewMoviePage> {
         .then((date) => {
               setState(() {
                 _selectedDate = date;
-                movie.releaseYear = _selectedDate.year;
+                movie.releaseDate = _selectedDate.microsecondsSinceEpoch;
               })
             });
   }
@@ -269,7 +276,7 @@ class _AddNewMoviePageState extends State<AddNewMoviePage> {
                                   )
                                 : Image.file(
                                     File(_imagePath),
-                                    fit: BoxFit.cover,
+                                    fit: BoxFit.fitHeight,
                                   ))),
                     Row(
                       children: [
